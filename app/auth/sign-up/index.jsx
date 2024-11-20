@@ -1,10 +1,17 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors } from '../../../constants/Colors';
-import { useRouter } from 'expo-router'; // Correct import
-import profile from '../../auth/profile' // Import Profile if it’s just a component
+import { useNavigation, useRouter } from 'expo-router'; // Correct import
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Index() {
+  const navigation=useNavigation();
+   
+  useEffect(()=>{
+    navigation.setOptions({
+      headerShown:false
+    })
+  },[])
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const router = useRouter();
 
@@ -19,7 +26,7 @@ export default function Index() {
     if (otpCode.length === 6) {
       console.log('OTP Submitted:', otpCode);
       // Navigate to Profile page
-      router.push('/auth/profile');  // Ensure that Profile is a page in the pages directory
+      router.push('/auth/pos');  // Ensure that Profile is a page in the pages directory
     } else {
       console.log('Please enter a valid 6-digit OTP');
     }
@@ -27,6 +34,9 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => router.back()}>
+        <Ionicons name="arrow-back-circle" size={30} color="black" />
+      </TouchableOpacity>
       <Text style={styles.heading}>Enter OTP</Text>
 
       <View style={styles.otpContainer}>
@@ -59,6 +69,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.WHITE,
     padding: 20,
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
   },
   heading: {
     fontSize: 24,
