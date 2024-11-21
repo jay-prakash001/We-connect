@@ -9,6 +9,7 @@ import {
   ScrollView,
   Platform,
   Animated,
+  ToastAndroid,
 } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import { useNavigation, useRouter } from 'expo-router'; // Import useRouter
@@ -49,10 +50,12 @@ export default function Index() {
   }, []);
 
   const handleGetOtp = () => {
-    if (name.trim() === '' || number.trim() === '') {
+    if (name.trim() === '' || number.trim() === '' || name.length < 3 || number.length != 10) {
+      showToast()
       setWarning('Please fill in all the details'); // Show warning
       return;
     }
+   
     setWarning(''); // Clear warning if fields are valid
 
     console.log('Name:', name);
@@ -61,7 +64,13 @@ export default function Index() {
     // Navigate to the sign-up page
     router.replace('auth/sign-up');
   };
-
+  const showToast = ()=>{
+    ToastAndroid.show(
+        "Please fill in the correct information.",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+    )
+};
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -110,6 +119,8 @@ export default function Index() {
           <TouchableOpacity style={styles.button} onPress={handleGetOtp}>
             <Text style={styles.buttonText}>Get OTP</Text>
           </TouchableOpacity>
+      
+        
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
