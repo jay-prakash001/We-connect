@@ -2,8 +2,8 @@ import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
 import { useNavigation } from 'expo-router';
 
-export default function payment() {
-  const navigation=useNavigation();
+export default function History() {
+    const navigation=useNavigation();
    
   useEffect
   (()=>{
@@ -13,7 +13,7 @@ export default function payment() {
   },[])
   return (
     <View>
-       
+      <Text>History</Text>
     </View>
   )
 }
