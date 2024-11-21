@@ -1,4 +1,4 @@
-import { Text, View, Image, StyleSheet, Animated, Easing } from "react-native";
+import { Text, View, Image, StyleSheet, Animated, Easing, ToastAndroid } from "react-native";
 import { Colors } from './../constants/Colors';
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 export default function Index() {
     const router = useRouter();
     const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale value
-
+   
     useEffect(() => {
         // Navigate to 'auth/sign-in' after 2 seconds
         const timer = setTimeout(() => {
@@ -29,7 +29,7 @@ export default function Index() {
         <View style={styles.container}>
             <Animated.View style={[styles.popup, { transform: [{ scale: scaleAnim }] }]}>
                 <Image 
-                    source={require('./../assets/images/abdul image.jpg')} 
+                    source={require('./../assets/images/app.png')} 
                     style={styles.image}
                 />
                 <Text style={styles.welcomeText}>Welcome</Text>
