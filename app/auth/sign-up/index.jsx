@@ -1,8 +1,14 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors } from '../../../constants/Colors';
+<<<<<<< HEAD
+import { useRouter } from 'expo-router'; // Correct import
+import profile from '../../auth/profile' // Import Profile if it’s just a component
+import { phone } from '../sign-in';
+=======
 import { useNavigation, useRouter } from 'expo-router'; // Correct import
 import Ionicons from '@expo/vector-icons/Ionicons';
+>>>>>>> 540c4f6ebea40ef65ad217df0b879e3060871b7a
 
 export default function Index() {
   const navigation=useNavigation();
@@ -20,13 +26,42 @@ export default function Index() {
     updatedOtp[index] = value;
     setOtp(updatedOtp);
   };
+  const verifyOtp = async (otp) => {
+    const url = "http://192.168.43.132:3000/verifyotp"; // Update with your API endpoint
+    const payload = { client_phone:phone,otp:otp };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setResponseMessage("OTP sent successfully!");
+      } else {
+        setResponseMessage(result.error || "Failed to send OTP.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setResponseMessage("Failed to send OTP.");
+    }
+  };
 
   const handleSubmit = () => {
     const otpCode = otp.join('');
+    console.log(otpCode)
     if (otpCode.length === 6) {
       console.log('OTP Submitted:', otpCode);
       // Navigate to Profile page
+<<<<<<< HEAD
+      // router.push('/auth/profile');
+      verifyOtp(otpCode)
+      // Ensure that Profile is a page in the pages directory
+=======
       router.push('/auth/pos');  // Ensure that Profile is a page in the pages directory
+>>>>>>> 540c4f6ebea40ef65ad217df0b879e3060871b7a
     } else {
       console.log('Please enter a valid 6-digit OTP');
     }

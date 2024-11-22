@@ -18,7 +18,6 @@ export default function Index() {
   const router = useRouter(); // Initialize the router
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [Username, setUsername] = useState('');
   const [warning, setWarning] = useState(''); // Warning message state
   const navigation=useNavigation();
    
@@ -61,7 +60,6 @@ export default function Index() {
 
     console.log('Name:', name);
     console.log('Number:', number);
-    console.log('Username:', Username);
 
     // Navigate to the sign-up page
     router.replace('auth/sign-up');
@@ -102,14 +100,6 @@ export default function Index() {
             placeholderTextColor="#000"
             value={name}
             onChangeText={setName}
-          /> 
-          {/* Name Input */}
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your Username"
-            placeholderTextColor="#000"
-            value={Username}
-            onChangeText={setUsername}
           />
 
           {/* Phone Number Input */}
