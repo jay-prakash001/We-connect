@@ -13,12 +13,12 @@ import {
 } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import { useNavigation, useRouter } from 'expo-router'; // Import useRouter
-
+export var phone = 0
 export default function Index() {
   const router = useRouter(); // Initialize the router
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
   const [warning, setWarning] = useState(''); // Warning message state
+  const [number, setNumber] = useState('');
   const navigation=useNavigation();
    
   useEffect(()=>{
@@ -26,7 +26,34 @@ export default function Index() {
       headerShown:false
     })
   },[])
+  
+  const [responseMessage, setResponseMessage] = useState("");
 
+  const getOtp = async () => {
+    const url = "http://192.168.43.132:3000/getotp"; // Update with your API endpoint
+    const payload = { client_phone: number };
+    phone = number
+
+    console.log("phone")
+    console.log(phone)
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setResponseMessage("OTP sent successfully!");
+      } else {
+        setResponseMessage(result.error || "Failed to send OTP.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setResponseMessage("Failed to send OTP.");
+    }
+  };
   // Animated value for the pop-up effect
   const animatedValue = useRef(new Animated.Value(0)).current;
 
@@ -55,14 +82,16 @@ export default function Index() {
       setWarning('Please fill in all the details'); // Show warning
       return;
     }
-   
+    getOtp()
     setWarning(''); // Clear warning if fields are valid
 
     console.log('Name:', name);
     console.log('Number:', number);
 
     // Navigate to the sign-up page
+
     router.replace('auth/sign-up');
+
   };
   const showToast = ()=>{
     ToastAndroid.show(
