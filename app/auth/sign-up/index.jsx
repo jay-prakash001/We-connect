@@ -1,14 +1,14 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Colors } from '../../../constants/Colors';
-<<<<<<< HEAD
-import { useRouter } from 'expo-router'; // Correct import
-import profile from '../../auth/profile' // Import Profile if it’s just a component
+// <<<<<<< HEAD
+// import { useRouter } from 'expo-router'; // Correct import
+// import profile from '../../auth/profile' // Import Profile if it’s just a component
 import { phone } from '../sign-in';
-=======
+// =======
 import { useNavigation, useRouter } from 'expo-router'; // Correct import
 import Ionicons from '@expo/vector-icons/Ionicons';
->>>>>>> 540c4f6ebea40ef65ad217df0b879e3060871b7a
+// >>>>>>> 540c4f6ebea40ef65ad217df0b879e3060871b7a
 
 export default function Index() {
   const navigation=useNavigation();
@@ -55,13 +55,13 @@ export default function Index() {
     if (otpCode.length === 6) {
       console.log('OTP Submitted:', otpCode);
       // Navigate to Profile page
-<<<<<<< HEAD
+// <<<<<<< HEAD
       // router.push('/auth/profile');
       verifyOtp(otpCode)
       // Ensure that Profile is a page in the pages directory
-=======
+// =======
       router.push('/auth/pos');  // Ensure that Profile is a page in the pages directory
->>>>>>> 540c4f6ebea40ef65ad217df0b879e3060871b7a
+// >>>>>>> 540c4f6ebea40ef65ad217df0b879e3060871b7a
     } else {
       console.log('Please enter a valid 6-digit OTP');
     }
@@ -78,7 +78,10 @@ export default function Index() {
         {otp.map((value, index) => (
           <TextInput
             key={index}
-            style={styles.input}
+            style={[
+              styles.input,
+              value !== "" ? styles.filledInput : styles.emptyInput // Conditional style
+            ]}
             keyboardType="numeric"
             maxLength={1}
             value={value}
@@ -118,26 +121,37 @@ const styles = StyleSheet.create({
   },
   otpContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
+    justifyContent: 'space-around',
+    width: '100%',
     marginBottom: 20,
   },
   input: {
     width: 50,
     height: 50,
-    backgroundColor: '#333',
+    
     borderRadius: 8,
     textAlign: 'center',
-    color: '#fff',
+
     fontSize: 24,
   },
+  emptyInput: {
+    
+    backgroundColor: '#fff',
+    borderColor:'#B9D9EB',
+    borderWidth:1
+  },
+  filledInput:{
+    backgroundColor: '#1877F2',
+    color:'#fff'
+
+  },
   button: {
-    backgroundColor: Colors.PRIMARY,
+    backgroundColor: '#1877F2',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 20,
     alignItems: 'center',
-    width: '80%',
+    width: '100%',
   },
   buttonText: {
     color: '#fff',

@@ -10,13 +10,13 @@ export default function Index() {
     useEffect(() => {
         // Navigate to 'auth/sign-in' after 2 seconds
         const timer = setTimeout(() => {
-            router.push('auth/sign-in');
+            router.replace('auth/sign-in');
         }, 2000);
 
         // Start the pop-up animation
         Animated.timing(scaleAnim, {
             toValue: 1,
-            duration: 1000, // Duration of the animation
+            duration: 1500, // Duration of the animation
             easing: Easing.out(Easing.ease),
             useNativeDriver: true,
         }).start();
@@ -29,12 +29,12 @@ export default function Index() {
         <View style={styles.container}>
             <Animated.View style={[styles.popup, { transform: [{ scale: scaleAnim }] }]}>
                 <Image 
-                    source={require('./../assets/images/app.png')} 
+                    source={require('./../assets/images/app.png')}  
                     style={styles.image}
                 />
                 <Text style={styles.welcomeText}>Welcome</Text>
             </Animated.View>
-        </View>
+        </View> 
     );
 }
 
