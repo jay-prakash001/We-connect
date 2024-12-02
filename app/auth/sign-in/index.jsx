@@ -9,14 +9,18 @@ import {
   ScrollView,
   Platform,
   Animated,
+  Button,
 } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import { useNavigation, useRouter } from 'expo-router'; // Import useRouter
+import BASE_URL from '../../../constants/utils';
 
+import { default as axios } from 'axios';
+export let phone = ""
 export default function Index() {
   const router = useRouter(); // Initialize the router
-  const [number, setNumber] = useState('');
   const [warning, setWarning] = useState(''); // Warning message state
+  const [number, setNumber] = useState('');
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -46,13 +50,29 @@ export default function Index() {
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
+  const get_otp = ()=>{
+    axios.post(BASE_URL+"api/v1/auth/get_otp",{
+      client_phone:number
+    }).then(function (res){
+      console.log(res)
+    }).catch(function (err){
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+      console.log(err)
+    })
+
+    console.log("hellow")
+  }
+
+
+
 
   const handleGetOtp = () => {
     if (number.trim() === '' || number.length != 10) {
       setWarning('Phone number can not be emptly'); // Show warning
       return;
     }
-
+    // phone = number
+    get_otp()
     setWarning(''); // Clear warning if fields are valid
 
 
@@ -107,7 +127,8 @@ export default function Index() {
             <TouchableOpacity style={styles.button} onPress={handleGetOtp}>
               <Text style={styles.buttonText}>Get OTP</Text>
             </TouchableOpacity>
-
+            <View>
+        </View>
           </View>
 
         </View>
