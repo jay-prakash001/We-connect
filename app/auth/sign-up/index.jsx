@@ -2,17 +2,18 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import React, { useEffect, useState } from 'react';
 import { Colors } from '../../../constants/Colors';
 
-import { useNavigation, useRouter } from 'expo-router'; 
+import { useNavigation, useRouter, useGlobalSearchParams } from 'expo-router'; 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import BASE_URL from '../../../constants/utils';
 
 import { default as axios } from 'axios';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Index() {
   const navigation=useNavigation();
-   
+  const { phone } = useGlobalSearchParams();
+  console.log("ppppppppppppppppp")
+   console.log(phone)
   useEffect(()=>{
     navigation.setOptions({
       headerShown:false
@@ -26,14 +27,28 @@ export default function Index() {
     updatedOtp[index] = value;
     setOtp(updatedOtp);
   };
-  const verifyOtp = async (otp) => {
-    const payload = { client_phone:phone,otp:otp };
-    console.log(payload)
-    // axios.post(BASE_URL+"api/v1/auth/verify_otp",{ client_phone:phone,otp:otp }).then(function (res){
-    //   console.log(res)
-    // }).catch(function (err){
-    //   console.log(err)
-    // })
+  const verifyOtp = async (otp,navigate) => {
+    const payload = { client_phone: phone, otp };
+    console.log("Payload:", payload);
+  
+    try {
+      const res = await axios.post(`${BASE_URL}api/v1/auth/verify_otp`, payload);
+      console.log("Response Data:", res.data);
+  
+      if (res.data && res.data.data) {
+        const accessToken = res.data.data.accessToken;
+        const refreshToken = res.data.data.refreshToken;
+  
+        // Store tokens in AsyncStorage
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+  
+        console.log("Tokens stored successfully.");
+        navigate()
+      }
+    } catch (err) {
+      console.error("Error during OTP verification:", err);
+    }
   };
 
   const handleSubmit = () => {
@@ -42,9 +57,11 @@ export default function Index() {
     if (otpCode.length === 6) {
       console.log('OTP Submitted:', otpCode);
    
-      verifyOtp(otpCode)
+      verifyOtp(otpCode,()=>{
+
+        router.push('/auth/pos');  
+      })
  
-      router.push('/auth/pos');  
     } else {
       console.log('Please enter a valid 6-digit OTP');
     }

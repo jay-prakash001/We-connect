@@ -16,7 +16,6 @@ import { useNavigation, useRouter } from 'expo-router'; // Import useRouter
 import BASE_URL from '../../../constants/utils';
 
 import { default as axios } from 'axios';
-export let phone = ""
 export default function Index() {
   const router = useRouter(); // Initialize the router
   const [warning, setWarning] = useState(''); // Warning message state
@@ -60,7 +59,6 @@ export default function Index() {
       console.log(err)
     })
 
-    console.log("hellow")
   }
 
 
@@ -71,7 +69,6 @@ export default function Index() {
       setWarning('Phone number can not be emptly'); // Show warning
       return;
     }
-    // phone = number
     get_otp()
     setWarning(''); // Clear warning if fields are valid
 
@@ -79,7 +76,8 @@ export default function Index() {
     console.log('Number:', number);
 
     // Navigate to the sign-up page
-    router.push('auth/sign-up');
+    // router.push('auth/sign-up');
+    router.push({pathname:'auth/sign-up',params:{phone:number}});
   };
 
   return (

@@ -1,17 +1,45 @@
 import { Text, View, Image, StyleSheet, Animated, Easing, ToastAndroid } from "react-native";
 import { Colors } from './../constants/Colors';
 import { useRouter } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
     const router = useRouter();
     const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale value
-   
+    const [accessToken, setAT] = useState("")
+ 
+    const getTokens = async ()=>{
+        try {
+          
+          const aT = await AsyncStorage.getItem('accessToken')
+          console.log(aT)
+          if(aT){
+            setAT(aT)
+            console.log(accessToken)
+        }
+    
+    
+        } catch (error) {
+          console.log(error)
+        }
+      }
     useEffect(() => {
         // Navigate to 'auth/sign-in' after 2 seconds
+        getTokens()
         const timer = setTimeout(() => {
-            router.replace('auth/sign-in');
+            if(accessToken){
+//to be changed
+                router.replace('/auth/pos');  
+            }else{
+
+                router.replace('auth/sign-in');
+            }
         }, 2000);
+           
+
+
 
         // Start the pop-up animation
         Animated.timing(scaleAnim, {
@@ -21,26 +49,27 @@ export default function Index() {
             useNativeDriver: true,
         }).start();
 
+      
         // Cleanup the timer on component unmount
         return () => clearTimeout(timer);
-    }, [router, scaleAnim]);
+    }, [router, scaleAnim,accessToken]);
 
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.popup, { transform: [{ scale: scaleAnim }] }]}>
-                <Image 
-                    source={require('./../assets/images/app.png')}  
+                <Image
+                    source={require('./../assets/images/app.png')}
                     style={styles.image}
                 />
                 <Text style={styles.welcomeText}>Welcome</Text>
             </Animated.View>
-        </View> 
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-         
+
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -54,7 +83,7 @@ const styles = StyleSheet.create({
         width: 500, // Optional: Adjust width
         height: 2000, // Optional: Adjust height
         resizeMode: 'contain', // Adjust image to fit within the given size
-        
+
     },
     welcomeText: {
         fontSize: 30,

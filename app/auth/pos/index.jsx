@@ -2,15 +2,28 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import { useNavigation, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
   const navigation = useNavigation();
   const router = useRouter();
 
+  const getTokens = async ()=>{
+    try {
+      
+      const aT = await AsyncStorage.getItem('accessToken')
+      console.log(aT)
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
+    getTokens()
   }, []);
 
   return (
