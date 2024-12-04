@@ -1,21 +1,26 @@
- import { View, Text } from 'react-native'
- import React, { useEffect } from 'react'
- import Login from './../components/Login'
+import { View, Text, Button } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Login from './../components/Login'
 import { useNavigation } from 'expo-router'
- 
- export default function index() {
-  const navigation=useNavigation();
-  useEffect(()=>{
+import approach from "../app/customer/(tabs)/approch.tsx"
+
+
+export default function index() {
+  const navigation = useNavigation();
+
+  useEffect(() => {
     navigation.setOptions({
-      headerShown:false
+      headerShown: false
     })
   })
-   return (
-     <View>
-       <Login/>
-     </View>
-   )
- }
+  return (
+    <View>
+      <Login/>
+    
+     
+    </View>
+  )
+}
 
 
 
