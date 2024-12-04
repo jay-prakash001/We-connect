@@ -3,11 +3,11 @@ import React, { useEffect } from 'react';
 import { useNavigation, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios';
 export default function Index() {
   const navigation = useNavigation();
   const router = useRouter();
-
+  
   const getTokens = async ()=>{
     try {
       
@@ -39,7 +39,7 @@ export default function Index() {
           onPress={() => router.push('/customer/profile')}
         >
           <Image
-            source={require('../../../assets/images/icon.png')} // Replace with your actual image path
+            source={require('../../../assets/images/client.png')} // Replace with your actual image path
             style={styles.image}
           />
           <Text style={styles.optionText}>Customer</Text>
@@ -48,10 +48,10 @@ export default function Index() {
         {/* Worker Option */}
         <TouchableOpacity
           style={styles.option}
-          onPress={() => router.push('/worker/profilr')}
+          onPress={() => router.push('/worker/profile')}
         >
           <Image
-            source={require('../../../assets/images/favicon.png')} // Replace with your actual image path
+            source={require('../../../assets/images/worker.png')} // Replace with your actual image path
             style={styles.image}
           />
           <Text style={styles.optionText}>Worker</Text>
