@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import { useNavigation, useRouter } from 'expo-router'; // Import useRouter
-import BASE_URL from '../../../constants/utils';
+import {BASE_URL} from '../../../constants/utils';
 
 import { default as axios } from 'axios';
 export default function Index() {

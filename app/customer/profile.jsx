@@ -15,12 +15,12 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
 import uplode from './../customer/(tabs)/profile'
 import axios from 'axios';
-import BASE_URL from '../../constants/utils'
+import {BASE_URL} from '../../constants/utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
   const [name, setName] = useState('');
-  const [photo, setPhoto] = useState("http://res.cloudinary.com/dm7a2laej/image/upload/v1733054211/hzgohawcvmabziqapmhn.png");
+  const [photo, setPhoto] = useState("");
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -53,17 +53,23 @@ export default function Profile() {
 
       console.log(res.data.data)
       console.log("xxxxxxxxxxxx")
-      if(res.data.data){
-        if(res.data.data.name){
-          console.log(res.data.data.name)
-          setName(res.data.data.name)
+      if (res.data?.data) {
+        const { name, profileImg } = res.data.data;
+      
+        if (name) {
+          console.log("User Name:", name);
+          setName(name);
         }
-        if(res.data.data.profileImg){
-          console.log(res.data.data.profileImg)
-          setPhoto(res.data.data.profileImg)
-
+      
+        if (profileImg) {
+          console.log("Profile Image URL:", profileImg);
+          setPhoto(profileImg);
+          console.log(photo)
         }
+      } else {
+        console.error("No data found in response:", res.data);
       }
+      
 
     } catch (error) {
       console.log(error)

@@ -5,7 +5,7 @@ import { Colors } from '../../../constants/Colors';
 import { useNavigation, useRouter, useGlobalSearchParams } from 'expo-router'; 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-import BASE_URL from '../../../constants/utils';
+import {BASE_URL} from '../../../constants/utils';
 
 import { default as axios } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
