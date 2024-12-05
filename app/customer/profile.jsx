@@ -14,23 +14,100 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
 import uplode from './../customer/(tabs)/profile'
+import axios from 'axios';
+import {BASE_URL} from '../../constants/utils'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
   const [name, setName] = useState('');
-  const [pincode, setPincode] = useState('');
-  const [qualification, setQualification] = useState('');
-  const [profession, setProfession] = useState('');
-  const [experience, setExperience] = useState('');
-  const [pastWork, setPastWork] = useState('');
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState("");
   const router = useRouter();
-  const navigation=useNavigation();
-   
-  useEffect(()=>{
+  const navigation = useNavigation();
+
+  const [accessToken, setAT] = useState("")
+
+  const getTokens = async () => {
+    try {
+
+      const aT = await AsyncStorage.getItem('accessToken')
+      console.log(aT)
+      if (aT) {
+        setAT(aT)
+        console.log(accessToken)
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const getUserDetails = async () => {
+    // https://weconnect-s060q7i6.b4a.run/api/v1/user/get_user_details/
+
+    try {
+      const res = await axios.get(BASE_URL + "/api/v1/user/get_user_details/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      console.log(res.data.data)
+      console.log("xxxxxxxxxxxx")
+      if (res.data?.data) {
+        const { name, profileImg } = res.data.data;
+      
+        if (name) {
+          console.log("User Name:", name);
+          setName(name);
+        }
+      
+        if (profileImg) {
+          console.log("Profile Image URL:", profileImg);
+          setPhoto(profileImg);
+          console.log(photo)
+        }
+      } else {
+        console.error("No data found in response:", res.data);
+      }
+      
+
+    } catch (error) {
+      console.log(error)
+    }
+
+
+  }
+
+  const updateUserDetail = async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("profileImg", {
+      uri: photo, // The local file path
+      name: "profile.jpg", // Desired filename
+      type: "image/jpeg", // MIME type
+    });
+  
+    try {
+      const res = await axios.patch(BASE_URL + "/api/v1/user/create_client/", formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      console.log("Update Response:", res.data);
+    } catch (error) {
+      console.error("Error updating user details:", error.response || error);
+    }
+  };
+  
+  useEffect(() => {
+    getTokens()
+    getUserDetails()
     navigation.setOptions({
-      headerShown:false
+      headerShown: false
     })
-  },[])
+  }, [])
 
   // Request permissions for camera and gallery access
   const requestPermissions = async () => {
@@ -48,6 +125,7 @@ export default function Profile() {
     }
     return true;
   };
+
 
   // Pick an image from the gallery or camera
   const pickImage = async () => {
@@ -67,26 +145,28 @@ export default function Profile() {
   };
 
   const handleSubmit = () => {
-    if (!name || !pincode || !qualification || !profession || !experience || !pastWork || !photo) {
+    if (!name  || !photo) {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
       return;
     }
-
+    updateUserDetail()
     // Navigate to the next route
     router.push('customer/(tabs)/profile');
   };
-
+  // https://weconnect-s060q7i6.b4a.run/api/v1/user/create_client/
+  
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.profileImageContainer}>
+      {/* <View style={styles.profileImageContainer}>
         {photo ? (
           <Image
             source={{ uri: photo }}
             style={styles.image}
           />
+
         ) : (
           <TouchableOpacity onPress={pickImage}>
             <View style={styles.placeholder}>
@@ -94,7 +174,19 @@ export default function Profile() {
             </View>
           </TouchableOpacity>
         )}
+      </View> */}
+      <View style={styles.profileImageContainer}>
+        
+          <TouchableOpacity onPress={pickImage}>
+          <Image
+            source={{ uri: photo }}
+            style={styles.image}
+          />
+          </TouchableOpacity>
+        
       </View>
+
+
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.heading}>Create Your Profile</Text>
@@ -106,42 +198,8 @@ export default function Profile() {
           value={name}
           onChangeText={setName}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Pincode"
-          placeholderTextColor="black"
-          keyboardType="numeric"
-          value={pincode}
-          onChangeText={setPincode}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Qualification"
-          placeholderTextColor="black"
-          value={qualification}
-          onChangeText={setQualification}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Profession"
-          placeholderTextColor="black"
-          value={profession}
-          onChangeText={setProfession}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Experience"
-          placeholderTextColor="black"
-          value={experience}
-          onChangeText={setExperience}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Past Work Details"
-          placeholderTextColor="black"
-          value={pastWork}
-          onChangeText={setPastWork}
-        />
+
+
 
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitText}>Submit</Text>
