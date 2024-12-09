@@ -48,7 +48,7 @@ export default function Index() {
         {/* Worker Option */}
         <TouchableOpacity
           style={styles.option}
-          onPress={() => router.push('/worker/profile')}
+          onPress={() => router.push('/worker/profilr')}
         >
           <Image
             source={require('../../../assets/images/worker.png')} // Replace with your actual image path
