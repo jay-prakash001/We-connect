@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
+import { getTokens, getUserDetails } from '../../constants/utils';
 
 export default function Profile() {
   const [name, setName] = useState('');
@@ -24,9 +25,18 @@ export default function Profile() {
   const [photo, setPhoto] = useState(null);
   const router = useRouter();
   const navigation=useNavigation();
-   
-  useEffect
-  (()=>{
+   const [token, setToken] = useState("")
+
+  useEffect(()=>{
+    setToken(getTokens())
+    console.log("hello")
+    console.log(token)
+    // const user = getUserDetails(token)
+    //  setName(user.name)
+    //  setPhoto(user.profileImg)
+
+    // console.log(name)
+    // console.log(photo)
     navigation.setOptions({
       headerShown:false
     })
