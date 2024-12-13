@@ -31,12 +31,12 @@ export default function Profile() {
     setToken(getTokens())
     console.log("hello")
     console.log(token)
-    // const user = getUserDetails(token)
-    //  setName(user.name)
-    //  setPhoto(user.profileImg)
+    const user = getUserDetails(token)
+     setName(user.name)
+     setPhoto(user.profileImg)
 
-    // console.log(name)
-    // console.log(photo)
+    console.log(name)
+    console.log(photo)
     navigation.setOptions({
       headerShown:false
     })

@@ -66,6 +66,8 @@ export default function Index() {
         // Store tokens in AsyncStorage
         await AsyncStorage.setItem('accessToken', accessToken);
         await AsyncStorage.setItem('refreshToken', refreshToken);
+      const ac =   await AsyncStorage.getItem('accessToken');
+      console.log(ac)
   
         console.log("Tokens stored successfully.");
         navigate()
