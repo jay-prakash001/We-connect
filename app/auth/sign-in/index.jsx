@@ -50,12 +50,13 @@ export default function Index() {
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
   const get_otp = ()=>{
+    // otp creation is temporarly closed
+
     axios.post(BASE_URL+"api/v1/auth/get_otp",{
       client_phone:number
     }).then(function (res){
       console.log(res)
     }).catch(function (err){
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
       console.log(err)
     })
 
@@ -69,7 +70,9 @@ export default function Index() {
       setWarning('Phone number can not be emptly'); // Show warning
       return;
     }
-    get_otp()
+
+    // uncomment if otp verification is required
+    // get_otp()
     setWarning(''); // Clear warning if fields are valid
 
 

@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Index() {
   const navigation=useNavigation();
   const { phone } = useGlobalSearchParams();
-  console.log("ppppppppppppppppp")
    console.log(phone)
   useEffect(()=>{
     navigation.setOptions({
@@ -51,13 +50,43 @@ export default function Index() {
     }
   };
 
+
+  const testUserCreation = async( navigate)=>{
+    const payload = { client_phone: phone };
+    console.log("Payload:", payload);
+  
+    try {
+      const res = await axios.post(`${BASE_URL}api/v1/auth/user_create_test`, payload);
+      console.log("Response Data:", res.data);
+  
+      if (res.data && res.data.data) {
+        const accessToken = res.data.data.accessToken;
+        const refreshToken = res.data.data.refreshToken;
+  
+        // Store tokens in AsyncStorage
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+  
+        console.log("Tokens stored successfully.");
+        navigate()
+      }
+    } catch (err) {
+      console.error("Error during OTP verification:", err);
+    }
+  }
   const handleSubmit = () => {
     const otpCode = otp.join('');
     console.log(otpCode)
     if (otpCode.length === 6) {
       console.log('OTP Submitted:', otpCode);
    
-      verifyOtp(otpCode,()=>{
+
+      //uncomment if need to verify otp
+      // verifyOtp(otpCode,()=>{
+
+      //   router.push('/auth/pos');  
+      // })
+      testUserCreation(()=>{
 
         router.push('/auth/pos');  
       })
