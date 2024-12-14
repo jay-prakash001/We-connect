@@ -140,6 +140,7 @@ export default function Profile() {
     });
 
     if (!result.canceled) {
+      console.log(result)
       setPhoto(result.assets[0].uri);
     }
   };

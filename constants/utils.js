@@ -40,4 +40,50 @@ const getUserDetails = async (accessToken = getTokens()) => {
   return null
 }
 
-export { BASE_URL, getTokens, getUserDetails }
+const getWorkerDetails = async (accessToken = getTokens()) => {
+  try {
+    const res = await axios.get(BASE_URL + "/api/v1/user/get_worker_details/", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (res.data?.data) {
+      const {
+        user: { name, profileImg },
+        worker: {
+          bio,
+          location: { lat, long, city, state, pin_code },
+          experience,
+        },
+      } = res.data.data;
+      console.log(name)
+      console.log('')
+      // console.log(res.data?.data)
+      // Return only the required fields
+      return {
+        name,
+        photo: profileImg,
+        bio,
+        location: {
+          lat,
+          long,
+          city,
+          state,
+          pincode: pin_code,
+        },
+        experience,
+      };
+    } else {
+      console.error("No data found in response:", res.data);
+    }
+  } catch (error) {
+    console.error("Error fetching worker details:", error);
+  }
+
+  return null;
+};
+
+
+
+export { BASE_URL, getTokens, getUserDetails,getWorkerDetails }
