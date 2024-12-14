@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
-import { getTokens, getWorkerDetails } from '../../constants/utils';
+import { getWorkerDetails, setWorkerDetails } from '../../constants/utils';
 
 
 
@@ -89,14 +89,32 @@ export default function Profile() {
     }));
 
   };
+
+  const updateDetails = async (callback) => {
+    console.log('update user called')
+    const res = await setWorkerDetails(name, photo, location.lat, location.long, location.city, location.pincode, location.state, bio, experience)
+
+    console.log(res.data)
+
+    if (res.data) {
+      callback()
+    }
+
+  }
   const handleSubmit = () => {
-    if (!name  || !bio || !location || !experience  || !photo) {
+    if (!name || !bio || !location || !experience || !photo) {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
       return;
     }
 
+
+
+    updateDetails(() => {
+
+      router.replace('worker/(tabs)/profile');
+    })
     // Navigate to the next route
-    router.replace('worker/(tabs)/profile');
+    // router.replace('worker/(tabs)/profile');
   };
 
   return (
@@ -111,15 +129,15 @@ export default function Profile() {
             style={styles.image}
           />
         ) : ( */}
-          <TouchableOpacity onPress={pickImage}>
-             <Image
+        <TouchableOpacity onPress={pickImage}>
+          <Image
             source={{ uri: photo }}
             style={styles.image}
           />
-            {/* <View style={styles.placeholder}>
+          {/* <View style={styles.placeholder}>
               <Text style={styles.placeholderText}>Upload Photo</Text> */}
-            {/* </View> */}
-          </TouchableOpacity>
+          {/* </View> */}
+        </TouchableOpacity>
         {/* // )} */}
       </View>
 
@@ -274,7 +292,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   submitButton: {
-    backgroundColor: '#0033ff',
+    backgroundColor: '#1877F2',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
