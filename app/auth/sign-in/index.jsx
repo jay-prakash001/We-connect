@@ -9,11 +9,13 @@ import {
   ScrollView,
   Platform,
   Animated,
-  Button,
+  ImageBackground,
+
+  Image
 } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import { useNavigation, useRouter } from 'expo-router'; // Import useRouter
-import {BASE_URL} from '../../../constants/utils';
+import { BASE_URL } from '../../../constants/utils';
 
 import { default as axios } from 'axios';
 export default function Index() {
@@ -49,21 +51,18 @@ export default function Index() {
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
-  const get_otp = ()=>{
+  const get_otp = () => {
     // otp creation is temporarly closed
 
-    axios.post(BASE_URL+"api/v1/auth/get_otp",{
-      client_phone:number
-    }).then(function (res){
+    axios.post(BASE_URL + "api/v1/auth/get_otp", {
+      client_phone: number
+    }).then(function (res) {
       console.log(res)
-    }).catch(function (err){
+    }).catch(function (err) {
       console.log(err)
     })
 
   }
-
-
-
 
   const handleGetOtp = () => {
     if (number.trim() === '' || number.length != 10) {
@@ -80,7 +79,7 @@ export default function Index() {
 
     // Navigate to the sign-up page
     // router.push('auth/sign-up');
-    router.push({pathname:'auth/sign-up',params:{phone:number}});
+    router.push({ pathname: 'auth/sign-up', params: { phone: number } });
   };
 
   return (
@@ -92,47 +91,71 @@ export default function Index() {
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.container}>
-          {/* Sign In Heading with Animation */}
-          <Animated.Text
-            style={[
-              styles.heading,
-              {
-                transform: [{ translateY: animatedValue }], // Apply pop-up animation
-              },
-            ]}
-          >
-            Sign In
-          </Animated.Text>
 
 
 
+        <ImageBackground
+          source={require('../../../assets/images/bg.jpg')} // Background image
+          style={styles.imageBackground}
+          resizeMode='cover' // Adjust to fit or cover the container
+        >
+          <View style={styles.container}>
 
-          {/* Phone Number Input */}
+            {/* Sign In Heading with Animation */}
 
-          <View style={styles.card}>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your phone number"
-              placeholderTextColor="#000"
-              keyboardType="phone-pad"
-              value={number}
-              onChangeText={setNumber}
-            />
+            <Animated.Text
+              style={[
+                styles.heading,
+                {
+                  transform: [{ translateY: animatedValue }], // Apply pop-up animation
+                },
+              ]}
+            >
+              Sign In
+            </Animated.Text>
 
-            {/* Warning Message */}
-            {warning ? <Text style={styles.warningText}>{warning}</Text> : null}
 
-            {/* Get OTP Button */}
-            <TouchableOpacity style={styles.button} onPress={handleGetOtp}>
-              <Text style={styles.buttonText}>Get OTP</Text>
-            </TouchableOpacity>
-            <View>
-        </View>
+            {/* Phone Number Input */}
+
+
+            <View style={styles.card}>
+              <Image
+                source={require('../../../assets/images/smartphone.png')} // Replace with your actual image path
+                style={styles.image}
+              />
+              <View style={styles.spacer}></View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.prefix}>+91</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your phone number"
+                  placeholderTextColor="#aaa"
+                  keyboardType="phone-pad"
+                  value={number}
+                  onChangeText={setNumber}
+                  maxLength={10} // Assuming Indian phone numbers have a maximum of 10 digits
+                />
+              </View>
+
+              {/* Warning Message */}
+              {warning ? <Text style={styles.warningText}>{warning}</Text> : null}
+
+              {/* Get OTP Button */}
+              <TouchableOpacity style={styles.button} onPress={handleGetOtp}>
+                <Text style={styles.buttonText}>Get OTP</Text>
+              </TouchableOpacity>
+              <View style={styles.spacer}></View>
+
+              <View>
+              </View>
+            </View>
+
           </View>
+        </ImageBackground>
 
-        </View>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -145,16 +168,31 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
+
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    padding: 10,
+
+  },
+  imageBackground: {
+    flex: 1,
+
+  },
+  image: {
+    width: 250,
+    height: 250,
+  },
+  spacer: {
+    width: '80%',
+    backgroundColor: '#aaa',
+    height: 1,
+    margin: 20
   },
   card: {
-    height: "40%",
+    height: "80%",
     width: "100%",
 
-    borderRadius: 8,
-  
+    borderRadius: 18,
+
     shadowColor: "#000", // Shadow color
     shadowOffset: { width: 0, height: 2 }, // Shadow offset
     shadowOpacity: 0.25, // Shadow opacity
@@ -163,26 +201,39 @@ const styles = StyleSheet.create({
     justifyContent: "center", // Center content vertically
     alignItems: "center", // Center content horizontally
     backgroundColor: "#fff", // Needed for shadows to work on iOS
-    padding:10
+    opacity: 0.9,
+    padding: 10,
   },
-  
+
   heading: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: 'bold',
-    color: Colors.PRIMARY,
+    color: Colors.WHITE,
     position: 'absolute',
     top: 50,
     textAlign: 'center',
     zIndex: 1,
   },
-  input: {
-    width: '100%',
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    padding: 18,
-    fontSize: 16,
+    paddingHorizontal: 10,
+    height: 50,
+    width: '100%',
+   
     marginBottom: 20,
+  },
+  prefix: {
+    fontSize: 16,
+    color: '#000',
+    marginRight: 5,
+  },
+  input: {
+    width: '100%',
+    fontSize: 18,
   },
   warningText: {
     color: '#000',
@@ -199,7 +250,7 @@ const styles = StyleSheet.create({
     // backgroundColor: Colors.AQUA,
     backgroundColor: "#1F75FE",
     borderRadius: 8,
-    paddingVertical: 12,
+    paddingVertical: 18,
     paddingHorizontal: 20,
     width: '100%',
     alignItems: 'center',
