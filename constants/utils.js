@@ -217,4 +217,84 @@ const getLocation = async () => {
 
   }
 }
-export { BASE_URL, getTokens, getUserDetails, getWorkerDetails, setWorkerDetails, getLocation }
+
+const create_post = async (title, description, lat, long, city, state, pin_code,  postImg ,accessToken = getTokens() ) =>{
+console.log('called')
+  const formData = new FormData();
+  formData.append("title", title); // Key: "name", Value: name
+  formData.append("description", description); // Key: "name", Value: name
+  formData.append("lat", lat); // Key: "lat", Value: lat
+  formData.append("long", long); // Key: "long", Value: long
+  formData.append("city", city); // Key: "city", Value: city
+  formData.append("state", state); // Key: "state", Value: state
+  formData.append("pin_code", pin_code); // Key: "pin_code", Value: pin_code
+ 
+    
+  postImg.forEach((element, index) => {
+    formData.append(`postImg`, {
+      uri: element, // The local file path
+      name: `post${index}.jpg`, // Unique filename for each image
+      type: "image/jpeg", // MIME type
+    });
+  });
+  // console.log(postImg)
+  // return formData
+console.log(formData)
+  try {
+    const res = await axios.post(BASE_URL + "api/v1/post/create_post/", formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("post creation Response:", res.data);
+    return res.data
+  } catch (error) {
+    console.error("Error post creation failed  details:", error.response?.data || error);
+  }
+
+}
+
+
+const create_post0 = async () => {
+  const accessToken = await getTokens()
+  const formData = new FormData();
+
+  // Append form fields
+  formData.append("title", "iron burn");
+  formData.append("description", "water motor change");
+  formData.append("lat", "21.5");
+  formData.append("long", "45.3");
+  formData.append("city", "raipur");
+  formData.append("state", "cg");
+  formData.append("pin_code", "493663");
+
+  // Append image files
+  formData.append("postImg", {
+    uri: "http://res.cloudinary.com/dm7a2laej/image/upload/v1734223949/d64egygluxicrah1nihy.jpg", // The local file path
+    name: "profile.jpg", // Desired filename
+    type: "image/jpeg", // MIME type
+  });
+  
+  try {
+    const response = await axios.post(
+      "https://weconnect-s060q7i6.b4a.run/api/v1/post/create_post/",
+      formData,
+      {
+        headers: {
+           // Automatically handles the boundary
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+
+        },
+      }
+    );
+
+    console.log("Response:", response.data);
+  } catch (error) {
+    console.error("Error:", error.response?.data || error.message);
+  }
+};
+
+export { BASE_URL, getTokens, getUserDetails, getWorkerDetails, setWorkerDetails, getLocation,create_post }

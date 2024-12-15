@@ -41,7 +41,7 @@ export default function Profile() {
         setBio(data?.bio || ''); // Fallback to an empty string if bio is null or undefined
         setLocation(data?.location || {}); // Fallback to an empty object if location is null or undefined
         setExperience(data?.experience || ''); // Fallback to an empty string if experience is null or undefined
-      
+
         if (data?.experience) {
           setIsExists(true);
         } else {
@@ -52,7 +52,7 @@ export default function Profile() {
 
     fetchWorkerDetails();
 
- 
+
 
 
     navigation.setOptions({
@@ -133,7 +133,7 @@ export default function Profile() {
     }
     router.replace('worker/(tabs)/profile')
   }
-  
+
 
   const useCurrentLocation = async () => {
     const a = await getLocation()
@@ -197,9 +197,9 @@ export default function Profile() {
         {/* Latitude and Longitude Row */}
 
         <TouchableOpacity onPress={useCurrentLocation} style={styles.locationButton}>
-      <Ionicons name="location" size={20} color="gray" style={styles.icon} />
-      <Text style={styles.text}>Use current location</Text>
-    </TouchableOpacity>
+          <Ionicons name="location" size={20} color="gray" style={styles.icon} />
+          <Text style={styles.text}>Use current location</Text>
+        </TouchableOpacity>
         <View style={styles.row}>
           <View style={styles.rowItem}>
             <TextInput
@@ -262,10 +262,10 @@ export default function Profile() {
         </TouchableOpacity>
 
         {isExists && (
-  <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-    <Text style={styles.skipText}>Skip</Text>
-  </TouchableOpacity>
-)}
+          <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+            <Text style={styles.skipText}>Skip</Text>
+          </TouchableOpacity>
+        )}
 
       </ScrollView>
     </KeyboardAvoidingView>
@@ -290,13 +290,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
-  locationButton:{
+  locationButton: {
     flexDirection: 'row', // Align icon and text in a row
     alignItems: 'center', // Center vertically
-  // Rounded corners
+    // Rounded corners
     margin: 5, // Margin around the button
   },
- 
+
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
