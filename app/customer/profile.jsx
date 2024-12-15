@@ -155,7 +155,13 @@ export default function Profile() {
     router.push('customer/(tabs)/profile');
   };
   // https://weconnect-s060q7i6.b4a.run/api/v1/user/create_client/
-  
+  const handleSkip = () => {
+    if (!name || !photo) {
+      Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
+      return;
+    }
+    router.push('customer/(tabs)/profile');
+    }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -205,6 +211,9 @@ export default function Profile() {
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitText}>Submit</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+    <Text style={styles.skipText}>Skip</Text>
+  </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -232,7 +241,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
-    padding: 10,
+    padding: 18,
     marginVertical: 10,
     color: 'black',
   },
@@ -257,15 +266,28 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   submitButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#1877F2',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   submitText: {
     color: '#fff',
     fontSize: 18,
+  },
+  skipButton: {
+    borderColor: '#1877F2',
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  skipText: {
+    color: '#1877F2',
+    fontSize: 18,
+
   },
 });
 
