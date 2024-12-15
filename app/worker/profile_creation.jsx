@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
-import { getWorkerDetails, setWorkerDetails } from '../../constants/utils';
+import { Ionicons } from '@expo/vector-icons'; // Expo Icons library
+import { getWorkerDetails, setWorkerDetails, getLocation } from '../../constants/utils';
 
 
 
@@ -21,6 +22,7 @@ export default function Profile() {
   const [name, setName] = useState('');
   const [photo, setPhoto] = useState("");
   const [bio, setBio] = useState('');
+  const [isExists, setIsExists] = useState(false);
   const [location, setLocation] = useState({ lat: 0, long: 0, city: "", state: "", pincode: "" });
 
   const [experience, setExperience] = useState('');
@@ -32,16 +34,25 @@ export default function Profile() {
 
     const fetchWorkerDetails = async () => {
       const data = await getWorkerDetails();
+      console.log(data.bio)
       if (data) {
-        setName(data.name);
-        setPhoto(data.photo);
-        setBio(data.bio);
-        setLocation(data.location);
-        setExperience(data.experience);
+        setName(data?.name || ''); // Fallback to an empty string if name is null or undefined
+        setPhoto(data?.photo || ''); // Fallback to an empty string if photo is null or undefined
+        setBio(data?.bio || ''); // Fallback to an empty string if bio is null or undefined
+        setLocation(data?.location || {}); // Fallback to an empty object if location is null or undefined
+        setExperience(data?.experience || ''); // Fallback to an empty string if experience is null or undefined
+      
+        if (data?.experience) {
+          setIsExists(true);
+        } else {
+          setIsExists(false);
+        }
       }
     };
 
     fetchWorkerDetails();
+
+ 
 
 
     navigation.setOptions({
@@ -102,7 +113,7 @@ export default function Profile() {
 
   }
   const handleSubmit = () => {
-    if (!name || !bio || !location || !experience || !photo) {
+    if (!name || !bio || !location.lat || !location.long || !location.state || !location.city || !location.pincode || !experience || !photo) {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
       return;
     }
@@ -113,8 +124,26 @@ export default function Profile() {
 
       router.replace('worker/(tabs)/profile');
     })
-    // Navigate to the next route
-    // router.replace('worker/(tabs)/profile');
+  };
+
+  const handleSkip = () => {
+    if (!name || !bio || !location.lat || !location.long || !location.state || !location.city || !location.pincode || !experience || !photo) {
+      Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
+      return;
+    }
+    router.replace('worker/(tabs)/profile')
+  }
+  
+
+  const useCurrentLocation = async () => {
+    const a = await getLocation()
+
+    if (!a) {
+      return
+    }
+
+    setLocation(a)
+
   };
 
   return (
@@ -166,6 +195,11 @@ export default function Profile() {
           placeholder="Enter experience"
         />
         {/* Latitude and Longitude Row */}
+
+        <TouchableOpacity onPress={useCurrentLocation} style={styles.locationButton}>
+      <Ionicons name="location" size={20} color="gray" style={styles.icon} />
+      <Text style={styles.text}>Use current location</Text>
+    </TouchableOpacity>
         <View style={styles.row}>
           <View style={styles.rowItem}>
             <TextInput
@@ -226,6 +260,13 @@ export default function Profile() {
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitText}>Submit</Text>
         </TouchableOpacity>
+
+        {isExists && (
+  <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+    <Text style={styles.skipText}>Skip</Text>
+  </TouchableOpacity>
+)}
+
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -246,15 +287,22 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: 'center',
   },
+  locationButton:{
+    flexDirection: 'row', // Align icon and text in a row
+    alignItems: 'center', // Center vertically
+  // Rounded corners
+    margin: 5, // Margin around the button
+  },
+ 
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
     padding: 14,
-    marginVertical: 4,
+    marginVertical: 2,
     color: 'black',
   },
   image: {
@@ -296,10 +344,23 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   submitText: {
     color: '#fff',
+    fontSize: 18,
+
+  },
+  skipButton: {
+    borderColor: '#1877F2',
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  skipText: {
+    color: '#1877F2',
     fontSize: 18,
 
   },
