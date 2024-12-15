@@ -40,7 +40,7 @@ const getUserDetails = async (accessToken = getTokens()) => {
     if (res.data?.data) {
       const { name, profileImg, phone } = res.data.data;
       const { createdAt, updatedAt } = res.data.data
-      return { name, profileImg, phone, updatedAt, createdAt }
+      return { name, profileImg, phone, updatedAt : convertIsoToDdmmyyyy(updatedAt), createdAt :convertIsoToDdmmyyyy(createdAt)}
     } else {
       console.error("No data found in response:", res.data);
     }
