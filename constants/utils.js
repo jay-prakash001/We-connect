@@ -40,7 +40,7 @@ const getUserDetails = async (accessToken = getTokens()) => {
     if (res.data?.data) {
       const { name, profileImg, phone } = res.data.data;
       const { createdAt, updatedAt } = res.data.data
-      return { name, profileImg, phone, updatedAt : convertIsoToDdmmyyyy(updatedAt), createdAt :convertIsoToDdmmyyyy(createdAt)}
+      return { name, profileImg, phone, updatedAt: convertIsoToDdmmyyyy(updatedAt), createdAt: convertIsoToDdmmyyyy(createdAt) }
     } else {
       console.error("No data found in response:", res.data);
     }
@@ -109,11 +109,11 @@ const getWorkerDetails = async (accessToken = getTokens()) => {
       try {
         let name = '', profileImg = '', phone = '', createdAt = '', updatedAt = '';
         let bio = '', lat = '', long = '', city = '', state = '', pin_code = '', experience = '';
-      
+
         if (res.data?.data?.user) {
           ({ name = '', profileImg = '', phone = '', createdAt = '', updatedAt = '' } = res.data.data.user);
         }
-      
+
         if (res.data?.data?.worker) {
           ({
             bio = '',
@@ -123,7 +123,7 @@ const getWorkerDetails = async (accessToken = getTokens()) => {
             experience = '',
           } = res.data.data.worker);
         }
-      
+
         return {
           name,
           photo: profileImg,
@@ -144,7 +144,7 @@ const getWorkerDetails = async (accessToken = getTokens()) => {
         console.error("Error processing worker details:", error);
         return null; // Handle errors gracefully
       }
-      
+
     } else {
       console.error("No data found in response:", res.data);
     }
@@ -218,8 +218,8 @@ const getLocation = async () => {
   }
 }
 
-const create_post = async (title, description, lat, long, city, state, pin_code,  postImg ,accessToken = getTokens() ) =>{
-console.log('called')
+const create_post = async (title, description, lat, long, city, state, pin_code, postImg, accessToken = getTokens()) => {
+  console.log('called')
   const formData = new FormData();
   formData.append("title", title); // Key: "name", Value: name
   formData.append("description", description); // Key: "name", Value: name
@@ -228,8 +228,8 @@ console.log('called')
   formData.append("city", city); // Key: "city", Value: city
   formData.append("state", state); // Key: "state", Value: state
   formData.append("pin_code", pin_code); // Key: "pin_code", Value: pin_code
- 
-    
+
+
   postImg.forEach((element, index) => {
     formData.append(`postImg`, {
       uri: element, // The local file path
@@ -239,7 +239,7 @@ console.log('called')
   });
   // console.log(postImg)
   // return formData
-console.log(formData)
+  console.log(formData)
   try {
     const res = await axios.post(BASE_URL + "api/v1/post/create_post/", formData, {
       headers: {
@@ -276,14 +276,14 @@ const create_post0 = async () => {
     name: "profile.jpg", // Desired filename
     type: "image/jpeg", // MIME type
   });
-  
+
   try {
     const response = await axios.post(
       "https://weconnect-s060q7i6.b4a.run/api/v1/post/create_post/",
       formData,
       {
         headers: {
-           // Automatically handles the boundary
+          // Automatically handles the boundary
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
 
@@ -297,4 +297,76 @@ const create_post0 = async () => {
   }
 };
 
-export { BASE_URL, getTokens, getUserDetails, getWorkerDetails, setWorkerDetails, getLocation,create_post }
+const getPostsNearWorker = async (lat, long, distance) => {
+  try {
+    const accessToken = getTokens()
+    const payLoad = { lat: lat, long: long, distance: distance }
+    const posts = await axios.post(BASE_URL + "api/v1/post/get_post_near_worker/", payLoad, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+
+    if (posts.data?.data) {
+      console.log(posts.data.data)
+
+      return posts.data.data
+    }
+  } catch (error) {
+    console.log('fetching posts error')
+    console.log(error)
+  }
+
+}
+
+const getPostById = async (id) => {
+  try {
+    const accessToken = await getTokens()
+    const res = await axios.post(BASE_URL + 'api/v1/post/get_post_by_id/', {
+      postId: id
+    },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+
+    if (res.data) {
+      console.log(res.data.data)
+      return res.data.data
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  return null
+}
+const setScreen = async (route) => {
+  await AsyncStorage.setItem('home', route)
+}
+
+const getScreen = async () => {
+  const route = await AsyncStorage.getItem('home')
+  console.log('xxxxxxxxxxxxxx')
+  console.log(route)
+  return route
+}
+
+const create_approach = async (postId, content) => {
+  const accessToken = await getTokens()
+  try {
+    const res = await axios.post(BASE_URL + 'api/v1/approach/create_approach/', {
+      postId, content
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    console.log(res.data)
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export { BASE_URL, getTokens, getUserDetails, getWorkerDetails, setWorkerDetails, getLocation, create_post, getPostsNearWorker, setScreen, getScreen, getPostById, create_approach }

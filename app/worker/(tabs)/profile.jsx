@@ -24,28 +24,8 @@ export default function profile() {
   const getDetails = async () => {
     const workerDetails = await getWorkerDetails()
 
-    // console.log(details) 
     setWorker(workerDetails)
 
-    // if (workerDetails) {
-    //   console.log(workerDetails); // Log the fetched details to see the data
-    //   setWorker({
-    //     name: workerDetails.name || '',
-    //     photo: workerDetails.photo || '',
-    //     phone: workerDetails.phone || '',
-    //     bio: workerDetails.bio || '',
-    //     location: {
-    //       lat: workerDetails.location?.lat || '',
-    //       long: workerDetails.location?.long || '',
-    //       city: workerDetails.location?.city || '',
-    //       state: workerDetails.location?.state || '',
-    //       pincode: workerDetails.location?.pincode || '',
-    //     },
-    //     experience: workerDetails.experience || '',
-    //     createdAt: workerDetails.createdAt || '',
-    //     updatedAt: workerDetails.updatedAt || '',
-    //   });
-    // }
   }
   useEffect
     (() => {
@@ -99,33 +79,41 @@ export default function profile() {
         editable={isEditing}
         style={{ borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 15 }}
       />
-      <Text style={styles.text}>Created At: {worker.createdAt}</Text>
-      <Text style={styles.text}>Updated At: {worker.updatedAt}</Text>
+      <View style={styles.row}>
+
+        <Text style={styles.text}>Join Date: {worker.createdAt}</Text>
+        <Text style={styles.text}>Last Updated : {worker.updatedAt}</Text>
+      </View>
       {/* Button to toggle edit mode */}
       <TouchableOpacity
         onPress={toggleEditMode}
-        style={{
-          backgroundColor: isEditing ? 'red' : 'green',
+        style={[styles.button, {
+          backgroundColor: isEditing ? '#c44' : 'green',
           padding: 15,
           alignItems: 'center',
           marginBottom: 20
-        }}
+        }]}
       >
-        <Text style={{ color: 'white', fontSize: 16 }}>
+        <Text style={styles.buttonText}>
           {isEditing ? 'Cancel Edit' : 'Edit Profile'}
         </Text>
       </TouchableOpacity>
 
       {/* Button to save changes */}
       {isEditing && (
-        <Button
-          title="Save Changes"
+        <TouchableOpacity style={styles.button}
+
           onPress={() => {
             // Logic to save changes (e.g., API call to update worker details)
             console.log('Changes saved:', worker);
             setIsEditing(false); // Disable edit mode after saving
           }}
-        />
+        >
+          <Text style={styles.buttonText}>
+            Save Changes
+          </Text>
+
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -147,7 +135,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 16,
-    marginVertical: 5,
+    // fontSize: 16,
+    // marginVertical: 5,
+    margin:10,
+    backgroundColor:'#cdf',
+    borderRadius:10,
+    // borderWidth:1,
+    padding:5,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    backgroundColor: '#1877F2',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+
   },
 });
