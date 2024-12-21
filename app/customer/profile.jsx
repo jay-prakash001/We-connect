@@ -15,7 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
 import uplode from './../customer/(tabs)/profile'
 import axios from 'axios';
-import {BASE_URL} from '../../constants/utils'
+import { BASE_URL, setScreen } from '../../constants/utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
@@ -51,25 +51,20 @@ export default function Profile() {
         }
       })
 
-      console.log(res.data.data)
-      console.log("xxxxxxxxxxxx")
       if (res.data?.data) {
         const { name, profileImg } = res.data.data;
-      
+
         if (name) {
-          console.log("User Name:", name);
           setName(name);
         }
-      
+
         if (profileImg) {
-          console.log("Profile Image URL:", profileImg);
           setPhoto(profileImg);
-          console.log(photo)
         }
       } else {
         console.error("No data found in response:", res.data);
       }
-      
+
 
     } catch (error) {
       console.log(error)
@@ -86,7 +81,7 @@ export default function Profile() {
       name: "profile.jpg", // Desired filename
       type: "image/jpeg", // MIME type
     });
-  
+
     try {
       const res = await axios.patch(BASE_URL + "/api/v1/user/create_client/", formData, {
         headers: {
@@ -94,13 +89,13 @@ export default function Profile() {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       console.log("Update Response:", res.data);
     } catch (error) {
       console.error("Error updating user details:", error.response || error);
     }
   };
-  
+
   useEffect(() => {
     getTokens()
     getUserDetails()
@@ -144,15 +139,18 @@ export default function Profile() {
       setPhoto(result.assets[0].uri);
     }
   };
-
+  const navigate = ()=>{
+    setScreen('customer/(tabs)/profile')
+    router.push('customer/(tabs)/profile');
+  }
   const handleSubmit = () => {
-    if (!name  || !photo) {
+    if (!name || !photo) {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
       return;
     }
     updateUserDetail()
     // Navigate to the next route
-    router.push('customer/(tabs)/profile');
+   navigate()
   };
   // https://weconnect-s060q7i6.b4a.run/api/v1/user/create_client/
   const handleSkip = () => {
@@ -160,37 +158,24 @@ export default function Profile() {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
       return;
     }
-    router.push('customer/(tabs)/profile');
-    }
+    navigate()
+   
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      {/* <View style={styles.profileImageContainer}>
-        {photo ? (
-          <Image
-            source={{ uri: photo }}
-            style={styles.image}
-          />
 
-        ) : (
-          <TouchableOpacity onPress={pickImage}>
-            <View style={styles.placeholder}>
-              <Text style={styles.placeholderText}>Upload Photo</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      </View> */}
       <View style={styles.profileImageContainer}>
-        
-          <TouchableOpacity onPress={pickImage}>
+
+        <TouchableOpacity onPress={pickImage}>
           <Image
             source={{ uri: photo }}
             style={styles.image}
           />
-          </TouchableOpacity>
-        
+        </TouchableOpacity>
+
       </View>
 
 
@@ -212,8 +197,8 @@ export default function Profile() {
           <Text style={styles.submitText}>Submit</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-    <Text style={styles.skipText}>Skip</Text>
-  </TouchableOpacity>
+          <Text style={styles.skipText}>Skip</Text>
+        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );

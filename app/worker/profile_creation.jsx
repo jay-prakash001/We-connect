@@ -14,7 +14,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'; // Expo Icons library
-import { getWorkerDetails, setWorkerDetails, getLocation } from '../../constants/utils';
+import { getWorkerDetails, setWorkerDetails, getLocation, setScreen } from '../../constants/utils';
 
 
 
@@ -112,6 +112,12 @@ export default function Profile() {
     }
 
   }
+
+  const navigate = () => {
+    router.replace('worker/(tabs)/profile');
+    setScreen('worker/(tabs)/profile')
+
+  }
   const handleSubmit = () => {
     if (!name || !bio || !location.lat || !location.long || !location.state || !location.city || !location.pincode || !experience || !photo) {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
@@ -121,8 +127,7 @@ export default function Profile() {
 
 
     updateDetails(() => {
-
-      router.replace('worker/(tabs)/profile');
+      navigate()
     })
   };
 
@@ -131,7 +136,7 @@ export default function Profile() {
       Alert.alert('Incomplete Details', 'Please fill all the fields and upload your photo.');
       return;
     }
-    router.replace('worker/(tabs)/profile')
+    navigate()
   }
 
 

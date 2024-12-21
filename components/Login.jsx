@@ -2,6 +2,7 @@ import { Text, View, Image, StyleSheet, Animated, Easing, ToastAndroid } from "r
 import { Colors } from './../constants/Colors';
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import {getScreen, setScreen} from '../constants/utils'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -9,35 +10,52 @@ export default function Index() {
     const router = useRouter();
     const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale value
     const [accessToken, setAT] = useState("")
- 
-    const getTokens = async ()=>{
+    const [screen, setS] = useState('')
+    const getTokens = async () => {
         try {
-          
-          const aT = await AsyncStorage.getItem('accessToken')
-          console.log(aT)
-          if(aT){
-            setAT(aT)
-            console.log(accessToken)
-        }
-    
-    
+
+            const aT = await AsyncStorage.getItem('accessToken')
+            console.log(aT)
+            if (aT) {
+                setAT(aT)
+                console.log(accessToken)
+            }
+
+
         } catch (error) {
-          console.log(error)
+            console.log(error)
         }
-      }
+    }
+const getStartingScreen = async()=>{
+    try {
+
+        const scr = await getScreen()
+            
+        return scr
+
+    } catch (error) {
+        console.log(error)
+    }
+    return null
+}
+
     useEffect(() => {
         // Navigate to 'auth/sign-in' after 2 seconds
         getTokens()
-        const timer = setTimeout(() => {
-            if(accessToken){
-//to be changed
-                router.replace('/auth/pos');  
-            }else{
+        const timer = setTimeout(async() => {
+            if (accessToken) {
+                   const a = await getStartingScreen()
+
+                    router.replace(a)
+
+
+                // router.replace('customer/(tabs)/profile');
+            } else {
 
                 router.replace('auth/sign-in');
             }
         }, 2000);
-           
+
 
 
 
@@ -49,10 +67,10 @@ export default function Index() {
             useNativeDriver: true,
         }).start();
 
-      
+
         // Cleanup the timer on component unmount
         return () => clearTimeout(timer);
-    }, [router, scaleAnim,accessToken]);
+    }, [router, scaleAnim, accessToken]);
 
     return (
         <View style={styles.container}>
