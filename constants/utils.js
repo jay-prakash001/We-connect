@@ -1,6 +1,7 @@
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from 'expo-location'
+import approch from "@/app/customer/(tabs)/approch";
 const BASE_URL = "https://weconnect-s060q7i6.b4a.run/"
 
 const convertIsoToDdmmyyyy = (isoTimestamp) => {
@@ -369,4 +370,63 @@ const create_approach = async (postId, content) => {
   }
 }
 
-export { BASE_URL, getTokens, getUserDetails, getWorkerDetails, setWorkerDetails, getLocation, create_post, getPostsNearWorker, setScreen, getScreen, getPostById, create_approach }
+const fetch_approachesWorker = async () => {
+  const accessToken = await getTokens()
+
+  try {
+    const res = await axios.get(BASE_URL + '/api/v1/approach/get_approach_worker/', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+
+    // console.log(res.data)
+    if (res.data.data) {
+      return res.data.data
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  return null
+}
+
+const sendChat = async(content, approachId)=>{
+  try {
+    const accessToken = await getTokens()
+    const res = await axios.post(BASE_URL+"api/v1/chat/send_chat/",{
+      approachId, content
+    },{
+      headers:{
+        Authorization:`Bearer ${accessToken}`
+      }
+    })
+
+    console.log(res.data)
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const getChats = async(approachId)=>{
+  try {
+    const accessToken = await getTokens()
+
+    const res = await axios.post(BASE_URL+"api/v1/chat/get_chat/",{
+      approachId:approachId
+    },{
+      headers:{
+        Authorization:accessToken
+      }
+    })
+
+    console.log(res.data)
+    if(res.data?.data){
+      return res.data.data
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+export { BASE_URL, convertIsoToDdmmyyyy, getTokens, getUserDetails, getWorkerDetails, setWorkerDetails, getLocation, create_post, getPostsNearWorker, setScreen, getScreen, getPostById, create_approach, fetch_approachesWorker ,sendChat,getChats}

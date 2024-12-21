@@ -60,8 +60,8 @@ const post = () => {
 
     })
   }, [])
-  const sendApproach = ()=>{
-   const res =  create_approach(post._id, content)
+  const sendApproach = () => {
+    const res = create_approach(post._id, content)
   }
   {/* {"__v": 0, "_id": "67638132f245b89b8bba0b70", "approaches": [], "client": {"__v": 0, "_id": "676368d33f9eacbb637c293b", "createdAt": "2024-12-19T00:29:07.099Z", "name": "jayprakash", "phone": 6264974771, "profileImg": "http://res.cloudinary.com/dm7a2laej/image/upload/v1734568671/g5fnvhqgndozfba8p6oo.png", "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZSI6NjI2NDk3NDc3MSwiaWF0IjoxNzM0NjkyNzMwLCJleHAiOjE3NDg1MTY3MzB9.4-XspQ-YrhvxXIGDtlJFTrdXvEAxqGy0GM1YcySxVsY", "updatedAt": "2024-12-20T11:05:30.156Z"}, "createdAt": "2024-12-19T02:13:06.098Z", "description": "Aet", "imagesUrl": ["http://res.cloudinary.com/dm7a2laej/image/upload/v1734574385/riyzzavjnn77ec64wbvv.jpg", "http://res.cloudinary.com/dm7a2laej/image/upload/v1734574385/zwe6writtw1f6cpil5lj.jpg", "http://res.cloudinary.com/dm7a2laej/image/upload/v1734574385/lytwzirc5pc8kt4tnjtn.png", "http://res.cloudinary.com/dm7a2laej/image/upload/v1734574385/a2uenv2dxeyhkponohz4.jpg"], "isOpen": true, "location": {"_id": "67638132f245b89b8bba0b71", "city": "Raipur", "coordinates": [81.6160094, 21.2321845], "lat": 21.2321845, "long": 81.6160094, "pin_code": 492013, "state": "6JJ8+V94, Ashwani Nagar, Lakhe Nagar, Raipur, Chhattisgarh 492013, India"}, "title": "Hello", "updatedAt": "2024-12-19T02:13:06.098Z"}*/ }
   return (
@@ -80,7 +80,7 @@ const post = () => {
       <Text style={styles.desc}>
         {post.description}
       </Text>
-      <Text style={styles.text}>Total Approaches : 
+      <Text style={styles.text}>Total Approaches :
         {post.approaches.length}
       </Text>
       <View style={styles.imgContainer}>
@@ -91,15 +91,15 @@ const post = () => {
         />
 
       </View>
-      <View style = {styles.approach}>
-    <TextInput style = {styles.input}
-    value={content}
-      onChangeText={setContent}
-    />
-    <Button
-    title='submit'
-    onPress={sendApproach}
-    />
+      <View style={styles.approach}>
+        <TextInput style={styles.input}
+          value={content}
+          onChangeText={setContent}
+        />
+        <Button
+          title='submit'
+          onPress={sendApproach}
+        />
       </View>
 
     </View >
@@ -131,9 +131,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'light'
   },
-  text:{
-    fontSize:16,
-    fontWeight:'thin'
+  text: {
+    fontSize: 16,
+    fontWeight: 'thin'
   },
   clientProfileImg: {
     width: 50,
@@ -165,18 +165,18 @@ const styles = StyleSheet.create({
     height: 200,
     width: 200
   },
-  approach:{
-    width:'100%',
-    maxHeight:80,
-    flex:1,
-    justifyContent:'flex-start', 
-    alignItems:'flex-start',
-    borderColor:'red',
-    borderWidth:1
+  approach: {
+    width: '100%',
+    maxHeight: 80,
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    borderColor: 'red',
+    borderWidth: 1
   },
-  input:{
-    borderWidth:1,
-    width:'100%'
+  input: {
+    borderWidth: 1,
+    width: '100%'
   }
 
 })
